@@ -82,6 +82,11 @@ lockfile="${GITHUB_ACTION_PATH}/support/locks/zizmor-${zizmor_version}.txt"
 [[ -f "${lockfile}" ]] \
     || die "Unknown version ${zizmor_version}; was it released after this action?"
 
+if [[ -n "${GHA_ZIZMOR_ZIZMOR_CONFIG:-}" ]]; then
+    echo "${GHA_ZIZMOR_ZIZMOR_CONFIG}" > "${RUNNER_TEMP}/zizmor.yml"
+    arguments+=("--config=${RUNNER_TEMP}/zizmor.yml")
+fi
+
 # The generated requirements start with the exact zizmor pin, including
 # for the aliases. Read it to locate the executable inside the wheel.
 read -r requirement _ < "${lockfile}"
