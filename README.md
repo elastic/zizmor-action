@@ -19,6 +19,7 @@ Run [`zizmor`] from GitHub Actions!
 - [Inputs](#inputs)
   - [`inputs`](#inputs)
   - [`collect`](#collect)
+  - [`strict-collection`](#strict-collection)
   - [`online-audits`](#online-audits)
   - [`persona`](#persona)
   - [`min-severity`](#min-severity)
@@ -94,7 +95,7 @@ jobs:
           persist-credentials: false
 
       - name: Run zizmor 🌈
-        uses: zizmorcore/zizmor-action@85b2b9fb8e3325e7a23d7d0a9d7ba5ae0f999e3e # v0.7.1
+        uses: zizmorcore/zizmor-action@bd12b495c90993a4301c73398142281a61499af3 # v0.9.0
 ```
 
 ### Usage without Github Advanced Security
@@ -129,7 +130,7 @@ jobs:
           persist-credentials: false
 
       - name: Run zizmor 🌈
-        uses: zizmorcore/zizmor-action@85b2b9fb8e3325e7a23d7d0a9d7ba5ae0f999e3e # v0.7.1
+        uses: zizmorcore/zizmor-action@bd12b495c90993a4301c73398142281a61499af3 # v0.9.0
         with:
           advanced-security: false
 ```
@@ -149,7 +150,7 @@ repositories:
 
 ```yaml
 - name: Run zizmor 🌈
-  uses: zizmorcore/zizmor-action@85b2b9fb8e3325e7a23d7d0a9d7ba5ae0f999e3e # v0.7.1
+  uses: zizmorcore/zizmor-action@bd12b495c90993a4301c73398142281a61499af3 # v0.9.0
   with:
     inputs: |
       .github/workflows/fishy.yml
@@ -167,6 +168,22 @@ See `zizmor`'s [Input collection] documentation for more information.
 
 See `zizmor`'s [Input collection] documentation for more information
 on the valid modes.
+
+### `strict-collection`
+
+*Default*: `false`
+
+`strict-collection` controls whether the action fails when `zizmor`
+can't parse a collected input. By default, `zizmor` warns about and skips
+any workflow or action definition with syntax or schema errors. Set this
+to `true` to make those errors fail the action instead.
+
+See `zizmor`'s [Input collection] documentation for more information.
+
+> [!IMPORTANT]
+> This input only works with `zizmor v1.7.0` and later. Earlier versions
+> of `zizmor` already fail on inputs they can't parse, and will reject
+> this flag, so leave it unset when using them.
 
 ### `online-audits`
 
@@ -346,6 +363,17 @@ own runners provide Python.
 If you see this error, it _probably_ means that you are running the action
 from a self-hosted runner without Python installed. Install Python onto the
 runner, or make sure it is on `PATH` by the time this action runs.
+
+### "No module named pip"
+
+This action currently uses `python3 -m pip download` to bootstrap zizmor,
+meaning that your Python distribution must also already have pip set up
+(as is the default).
+
+If you see this or a similar error, it means you have Python 3 installed as
+`python3`, but your Python 3 distribution lacks `pip`. The solution
+is to install `pip`, potentially either via a new Python distribution
+(e.g. `actions/setup-python`) _or_ via `python3 -m ensurepip`.
 
 ### Changes introduce security alerts but no PR checks are shown
 
